@@ -1,4 +1,5 @@
-CXX = arm-f1c100s-linux-uclibcgnueabi-g++
+CROSS_COMPILE := arm-f1c100s-linux-uclibcgnueabi-
+CXX = $(CROSS_COMPILE)g++
 TARGET1	= ledcube
 
 DIR		= .

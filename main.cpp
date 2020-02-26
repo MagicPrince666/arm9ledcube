@@ -139,7 +139,7 @@ void cen_on(u_int8_t y){
   }
 }
 
-void display(u_int16_t time,u_int8_t dat)
+void _display(u_int16_t time,u_int8_t dat)
 {
   unsigned char x,y,z;
   int times = 0;
@@ -559,7 +559,7 @@ void blew_heart(int tv) {
     while(times--) {
       for(y = 0; y < 8; y++) {
         for(x = 0; x < 8; x++) {
-            hc595(heart[0][y][x]);    
+            hc595(heart[0][7-y][7-x]);
         }
         hc595out();
         cen_on(y);
@@ -572,7 +572,7 @@ void blew_heart(int tv) {
     while(times--) {
       for(y = 0; y < 8; y++) {
         for(x = 0; x < 8; x++) {
-            hc595(heart[1][y][x]);    
+            hc595(heart[1][7-y][7-x]);
         }
         hc595out();
         cen_on(y);
@@ -584,6 +584,37 @@ void blew_heart(int tv) {
     times = tv;
   }
 
+}
+
+void _my_heart(int tv) {
+  unsigned char heart[8][8] = {
+    {0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x3c,0x3c,0x00,0x00,0x00},
+    {0x00,0x00,0x18,0x7e,0x7e,0x18,0x00,0x00},
+    {0x00,0x00,0x3c,0x7e,0x7e,0x3c,0x00,0x00},
+    {0x00,0x18,0x7e,0xff,0xff,0x7e,0x18,0x00},
+    {0x00,0x00,0x7e,0xff,0xff,0x7e,0x00,0x00},
+    {0x00,0x00,0x00,0x66,0x66,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
+  };
+
+  unsigned int x,y,z;
+  int times = tv;
+  for(z = 0; z < 7; z++) {
+    while(times--) {
+      for(y = 0; y < 8; y++) {
+        for(x = 0; x < 8; x++) {
+          hc595(heart[7-y][7-x]);
+        }
+        hc595out();
+        cen_on(y);
+        usleep(13*times);
+        cen_on(8);
+        usleep(200 - 13*times);
+      }
+    }
+    times = tv;
+  }
 }
 
 static void sigint_handler(int sig)
@@ -605,9 +636,8 @@ int main(int argc, char *argv[])
 
     signal(SIGINT, sigint_handler);//信号处理
 
-    while(1){
-        blew_heart(5);
-#if 0
+    while(1) {
+#if 1
         mycube(20);
         for(int i = 0; i < 4; i++) {
           cube_water1(7);
@@ -617,7 +647,12 @@ int main(int argc, char *argv[])
           rain_cube(5);
         }
         //break;
-#endif   
+#endif
+      for(int i = 0; i <= 3; i++) {
+        blew_heart(15 - 5*i);
+      }
+      _my_heart(15);
+      _display(20, 0);
     }
     close(hc595_dat);
     close(hc595_st);
