@@ -20,6 +20,8 @@ int hc595_st = -1;
 int hc595_sh = -1;
 int gpio_layer[8] = {-1};
 
+
+
 int init_gpio(void){
     hc595_dat = open("/sys/class/leds/hc595:dat/brightness", O_RDWR);
     if(hc595_dat <= 0){
@@ -137,6 +139,19 @@ void cen_on(u_int8_t y){
           break;
       default:break;
   }
+}
+
+static void sigint_handler(int sig)
+{
+    cen_on(8);
+    close(hc595_dat);
+    close(hc595_st);
+    close(hc595_sh);
+    for (int i = 0 ;i < 8; i++){
+        close(gpio_layer[i]);
+    }
+    cout << "--- quit the loop! ---" << endl;
+    exit(0);
 }
 
 void _display(u_int16_t time,u_int8_t dat)
@@ -601,7 +616,7 @@ void _my_heart(int tv) {
 
   unsigned int x,y,z;
   int times = tv;
-  for(z = 0; z < 8; z++) {
+  for(z = 0; z <= 8; z++) {
     while(times--) {
       for(y = 0; y < 8; y++) {
         for(x = 0; x < 8; x++) {
@@ -915,20 +930,79 @@ void _run_cube( int tv) {
   }
 }
 
-static void sigint_handler(int sig)
-{
-    cen_on(8);
-    close(hc595_dat);
-    close(hc595_st);
-    close(hc595_sh);
-    for (int i = 0 ;i < 8; i++){
-        close(gpio_layer[i]);
-    }
-    cout << "--- quit the loop! ---" << endl;
-    exit(0);
-}
+
 //lynette, you are so pritty
 //you are my star
+void _heartbeat(int tv) {
+  unsigned char heart[8][8] = {
+    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x66,0x66,0x00,0x00,0x00},
+    {0x00,0x00,0x7e,0xff,0xff,0x7e,0x00,0x00},
+    {0x00,0x18,0x7e,0xff,0xff,0x7e,0x18,0x00},
+    {0x00,0x00,0x3c,0x7e,0x7e,0x3c,0x00,0x00},
+    {0x00,0x00,0x18,0x7e,0x7e,0x18,0x00,0x00},
+    {0x00,0x00,0x00,0x3c,0x3c,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00}
+  };
+
+  unsigned int x,y,z;
+  int times = tv;
+  for(z = 0; z < 4; z++) {
+    while(times--) {
+      for(y = 0; y < 8; y++) {
+        for(x = 0; x < 8; x++) {
+          if(z%2 == 1) {
+            if(x<7)
+              hc595(heart[y][x+1]);
+            else hc595(0);
+          } else {
+            hc595(heart[y][x]);
+          }
+        }
+        hc595out();
+        cen_on(y);
+        usleep(200);
+        cen_on(8);
+        usleep(100);
+      }
+    }
+    times = tv;
+  }
+}
+
+void _fail_heart(int tv) {
+  unsigned char heart[8][8] = {
+    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x66,0x66,0x00,0x00,0x00},
+    {0x00,0x00,0x7e,0xff,0xff,0x7e,0x00,0x00},
+    {0x00,0x18,0x7e,0xff,0xff,0x7e,0x18,0x00},
+    {0x00,0x00,0x3c,0x7e,0x7e,0x3c,0x00,0x00},
+    {0x00,0x00,0x18,0x7e,0x7e,0x18,0x00,0x00},
+    {0x00,0x00,0x00,0x3c,0x3c,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00}
+  };
+
+  unsigned int x,y,z;
+  int times = tv;
+  for(z = 0; z < 8; z++) {
+    while(times--) {
+      for(y = 0; y < 8; y++) {
+        for(x = 0; x < 8; x++) {
+            if(y > z)
+              hc595(heart[y-z][x]);
+            else hc595(0);
+        }
+        hc595out();
+        cen_on(y);
+        //usleep(200);
+        cen_on(8);
+        usleep(100);
+      }
+    }
+    times = tv;
+  }
+}
+
 int main(int argc, char *argv[])
 {
     init_gpio();
@@ -936,10 +1010,10 @@ int main(int argc, char *argv[])
     signal(SIGINT, sigint_handler);//信号处理
 
     while(1) {
-       
+      //_fail_heart(20);
 #if 0
       mycube(20);
-      for(int i = 0; i < 4; i++) {
+      for(int i = 0; i < 3; i++) {
         cube_water1(7);
       }
       //cube_water2(8);
@@ -951,13 +1025,18 @@ int main(int argc, char *argv[])
       for(int i = 0; i <= 3; i++) {
         blew_heart(15 - 5*i);
       }
+      //_heartbeat(20);
       _my_heart(20);
+      _fail_heart(20);
       _display(40, 0);
       rotating_mycube_(10);
       _run_cube(10);
       _sin_cube(sin_cube_table, 14, 6);
       _sin_cube(sin_cube_table, 14, 6);
       _sin_cube(sin_cube_table, 14, 6);
+      for(int i = 0; i < 3; i++) {
+        cube_water1(7);
+      }
 #endif
     }
     close(hc595_dat);
