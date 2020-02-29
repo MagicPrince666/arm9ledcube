@@ -84,15 +84,14 @@ void general(const unsigned char po[][8][8], unsigned int cnt, int tv) {
   }
 }
 
-void loudou( int tv) {
-  unsigned char cube[8][8] = {0};
+void _hourglass(const unsigned char po[][8][8], unsigned int cnt, int tv) {
   unsigned int x,y,z;
   int times = tv;
-  for(z = 0; z < 8; z++) {
+  for(z = 0; z < cnt; z++) {
     while(times--) {
       for(y = 0; y < 8; y++) {
         for(x = 0; x < 8; x++) {
-          hc595(cube[y][x]);
+          hc595(po[z][7-y][x]);
         }
         hc595out();
         cen_on(y);
@@ -161,9 +160,10 @@ int main(int argc, char *argv[])
     while(1) {
 
 #if 0
-      for_lynette_(10);
+      general(yanhua, 6, 10);
 #else 
-      for(int i = 0; i <= 3; i++) //心跳加速
+      for_lynette_(7);      //写给lynette
+      for(int i = 0; i < 3; i++) //心跳加速
         blew_heart(15 - 5*i);
       _my_heart(20);              //停止跳动 渐渐暗淡
       _fail_heart(20);            //渐渐落下
@@ -179,8 +179,13 @@ int main(int argc, char *argv[])
       for(int i = 0; i < 3; i++)  //旋转着
         general(warping,15,8);
       displayking(7);             //时间的沙漏
-      general( king,8,10);        //抚平一切
+      _hourglass( king,8,10);        //抚平一切
       _display(40, 0);            //世界仍旧黑暗
+      general(shandian, 22, 8);//黎明终会升起
+      general(cube, 26, 8);//空虚的心终将会填满
+      general(cube2, 8, 8);//褪去铅华
+      //general(IVU_1, 21, 10);//你看不到的我爱你
+      _display(40, 0);            //the end
 
 #endif
     }

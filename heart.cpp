@@ -186,21 +186,20 @@ void _fail_heart(int tv)
 
 void for_lynette_(int tv)
 {
-  unsigned char cube[8][8] = {0};
+  uint8_t cube[8][8] = {0};
   uint8_t dat = 0;
 
   unsigned int x,y,z;
   int times = tv;
-    for(z = 0; z < 1; z++) {
-
-      //dat = (lynette[i][z] << z) | (lynette[i+1][z] >> (7-z));
+  for (int  i = 0; i < 11;i++){
+    for(z = 0; z < 8; z++) {
 
       while(times--) {
         for(y = 0; y < 8; y++) {//体
 
-          dat = (lynette[z][y] << y) | (lynette[z + 1][y] >> (7-y));//字幕向左滚动算法
-          cube[y][3] = dat;//面的第三线 填入点阵数据
-          //cube[y][4] = dat;
+          dat =   (lynette[i][y]  << z )  | (lynette[i + 1][y] >> (7-z));//字幕向左滚动算法
+          cube[y][0]  = dat;
+          cube[y][1]  = dat;
 
           for(x = 0; x < 8; x++) {//面
             hc595(cube[y][x]);//线
@@ -209,9 +208,10 @@ void for_lynette_(int tv)
           cen_on(y);
           usleep(200);
           cen_on(8);
-          usleep(200);
+          usleep(100);
         }
       }
       times = tv;
     }
+  }
 }

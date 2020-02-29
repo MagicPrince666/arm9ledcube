@@ -18,6 +18,5 @@ extern const unsigned char cube[][8][8];
 extern const unsigned char IVU_1[][8][8];
 extern const unsigned char cube2[][8][8];
 extern const unsigned char yanhua[][8][8];
-extern const unsigned char LCX[][8][8];
 extern const unsigned char warping[][8][8];
 #endif

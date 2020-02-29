@@ -217,7 +217,7 @@ void _sin_cube(const unsigned char po[][8][8], unsigned int cnt, int tv) {
     while(times--) {
       for(y = 0; y < 8; y++){
         for(x = 0; x < 8; x++){
-          hc595(po[z][y][x]);
+          hc595(po[z][7-y][7-x]);
         }
         hc595out();
         cen_on(y);
