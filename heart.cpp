@@ -1,9 +1,13 @@
 #include "heart.h"
 #include "contrl.h"
 
+/**********************************************
+ * Miss Lynette, you are so pritty
+ * You are my star
+ * What is the star
+ * The sun far away from me
+***********************************************/
 
-//lynette, you are so pritty
-//you are my star
 void blew_heart(int tv) {
   unsigned char heart[2][8][8] = {
     {
