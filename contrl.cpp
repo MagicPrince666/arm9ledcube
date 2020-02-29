@@ -138,4 +138,5 @@ int cube_close(void)
     for (int i = 0 ;i < 8; i++){
         close(gpio_layer[i]);
     }
+    return 0;
 }
