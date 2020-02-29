@@ -15,6 +15,7 @@
 #include "contrl.h"
 #include "heart.h"
 #include "water.h"
+#include "mycube.h"
 
 using namespace std;
 
@@ -83,223 +84,15 @@ void general(const unsigned char po[][8][8], unsigned int cnt, int tv) {
   }
 }
 
-
-
-void mycube(int tv) {
-  unsigned char cube[8][8] = {
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
-    };
-
+void loudou( int tv) {
+  unsigned char cube[8][8] = {0};
   unsigned int x,y,z;
   int times = tv;
-  int layer = 0;
-  int magic = 0;
-
-  for(z = 0; z < 13; z++){
-    if(z < 6) magic = z;
-    else magic = 12 - z;
-    switch(magic){
-      case 0: cube[layer][7] = 0x00;
-              cube[layer][6] = 0x00;
-              cube[layer][5] = 0x00;
-              cube[layer][4] = 0x00;
-              cube[layer][3] = 0x08;
-              cube[layer][2] = 0x00;
-              cube[layer][1] = 0x00;
-              cube[layer][0] = 0x00;
-      break;
-      case 1: cube[layer][7] = 0x00;
-              cube[layer][6] = 0x00;
-              cube[layer][5] = 0x00;
-              cube[layer][4] = 0x08;
-              cube[layer][3] = 0x14;
-              cube[layer][2] = 0x08;
-              cube[layer][1] = 0x00;
-              cube[layer][0] = 0x00;
-      break;
-      case 2: cube[layer][6] = 0x00;
-              cube[layer][5] = 0x08;
-              cube[layer][4] = 0x14;
-              cube[layer][3] = 0x22;
-              cube[layer][2] = 0x14;
-              cube[layer][1] = 0x08;
-              cube[layer][0] = 0x00;
-      break;
-      case 3: cube[layer][7] = 0x00;
-              cube[layer][6] = 0x08;
-              cube[layer][5] = 0x22;
-              cube[layer][4] = 0x00;
-              cube[layer][3] = 0x41;
-              cube[layer][2] = 0x00;
-              cube[layer][1] = 0x22;
-              cube[layer][0] = 0x08;
-      break;
-      case 4: cube[layer][7] = 0x08;
-              cube[layer][6] = 0x41;
-              cube[layer][5] = 0x00;
-              cube[layer][4] = 0x00;
-              cube[layer][3] = 0x80;
-              cube[layer][2] = 0x00;
-              cube[layer][1] = 0x00;
-              cube[layer][0] = 0x41;
-      break;
-      case 5: cube[layer][7] = 0x80;
-              cube[layer][6] = 0x00;
-              cube[layer][5] = 0x00;
-              cube[layer][4] = 0x00;
-              cube[layer][3] = 0x00;
-              cube[layer][2] = 0x00;
-              cube[layer][1] = 0x00;
-              cube[layer][0] = 0x00;
-      break;
-      case 6: cube[layer][7] = 0x00;
-              cube[layer][6] = 0x00;
-              cube[layer][5] = 0x00;
-              cube[layer][4] = 0x00;
-              cube[layer][3] = 0x00;
-              cube[layer][2] = 0x00;
-              cube[layer][1] = 0x00;
-              cube[layer][0] = 0x00;
-      break;
-    }
-    
-    while(times--){
-      for(y = 0; y < 8; y++){
-        for(x = 0; x < 8; x++){
-          hc595(cube[y][x]);
-        }
-        hc595out();
-        cen_on(y);
-        usleep(200);
-        cen_on(8);
-        usleep(100);
-      }  
-    }
-    times = tv;
-  }
-}
-
-
-void rotating_mycube_(int tv) {
-  unsigned char cube[8][8] = {
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
-    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
-    };
-
-  unsigned int x,y,z;
-  int times = tv;
-
-  for(z = 0; z < 8; z++) {
-    switch(z) {
-      case 0: for( uint8_t i = z; i < 8 - z; i++) {
-                cube[7 - z][i] = 0x01<<i;
-              }
-      break;
-      case 1: for( uint8_t i = z; i < 8 - z; i++) {
-                cube[7 - z][i] = 0x01<<i;
-              }
-              cube[7 - z][7] = 0x40;
-              cube[7 - z][0] = 0x02;
-      break;
-      case 2: for( uint8_t i = z; i < 8 - z; i++) {
-                cube[7 - z][i] = 0x01<<i;
-              }
-              cube[7 - z][7] = 0x20;
-              cube[7 - z][6] = 0x20;
-              cube[7 - z][1] = 0x04;
-              cube[7 - z][0] = 0x04;
-      break;
-      case 3: for( uint8_t i = 0; i < 4; i++) {
-                cube[7 - z][i] = 0x08;
-                cube[7 - z][7 - i] = 0x10;
-              }
-      break;
-      case 4: for( uint8_t i = 0; i < 4; i++) {
-                cube[7 - z][7 - i] = 0x08;
-                cube[7 - z][i] = 0x10;
-              }
-      break;
-      case 5: for( uint8_t i = 2; i < 6; i++) {
-                cube[7 - z][7 - i] = 0x01<<i;
-              }
-              cube[7 - z][7] = 0x04;
-              cube[7 - z][6] = 0x04;
-              cube[7 - z][1] = 0x20;
-              cube[7 - z][0] = 0x20;
-      break;
-      case 6: for( uint8_t i = 1; i < 7; i++) {
-                cube[7 - z][7 - i] = 0x01<<i;
-              }
-              cube[7 - z][7] = 0x02;
-              cube[7 - z][0] = 0x40;
-      break;
-      case 7: for( uint8_t i = 0; i < 8; i++) {
-                cube[7 - z][7 - i] = 0x01<<i;
-              }
-      break;
-    }
-    
-    while(times--) {
-      for(y = 0; y < 8; y++) {
-        for(x = 0; x < 8; x++) {
-          hc595(cube[y][x]);
-        }
-        hc595out();
-        cen_on(y);
-        usleep(200);
-        cen_on(8);
-        usleep(100);
-      }  
-    }
-    times = tv;
-  }
-#if 0
-  int ctl = 0;
   for(z = 0; z < 8; z++) {
     while(times--) {
       for(y = 0; y < 8; y++) {
         for(x = 0; x < 8; x++) {
-            hc595(cube[y][x]);
-        }
-        hc595out();
-        ctl = z + y;
-        if (ctl <= 7) {
-          cen_on(ctl);
-        } else {
-          cen_on(ctl - 8);
-        }
-        
-        usleep(200);
-        cen_on(8);
-        usleep(100);
-      }  
-    }
-    times = tv;
-  }
-#endif
-}
-
-void _sin_cube(const unsigned char po[][8][8], unsigned int cnt, int tv) {
-  unsigned int x,y,z;
-  int times = tv;
-  for(z = 0; z < cnt; z++){
-    while(times--) {
-      for(y = 0; y < 8; y++){
-        for(x = 0; x < 8; x++){
-          hc595(po[z][y][x]);
+          hc595(cube[y][x]);
         }
         hc595out();
         cen_on(y);
@@ -308,7 +101,54 @@ void _sin_cube(const unsigned char po[][8][8], unsigned int cnt, int tv) {
         usleep(100);
       }
 	  }
-    times = tv;
+    times= tv;
+    //printf("Z=%d\n",z);
+  }
+}
+
+void displayking(int tv)
+{
+  uint8_t x,y,z,i=0,j=0,num;
+  int times = tv;
+  uint8_t Cube[8][8] = {0};
+  uint8_t cen[8]={0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
+
+  for(i = 0;i < 8;i++) {
+    if(i < 4) z = -8*i + 28;
+	  else z = 8*i - 28;
+
+      j=i;
+      for(num = 0;num < z;num++) {
+        if(i < 4) {
+          switch(num/(z/4)) {
+            case 0:{Cube[i][j] |= Cube[i][j]>>1 | cen[7-i];}break;
+            case 1:{Cube[i][j++] |= cen[i];}break;
+            case 2:{Cube[i][7-i] |= Cube[i][7-i]<<1 | cen[i];}break;
+            case 3:{Cube[i][j] |= Cube[i][j] | cen[7-i];j--;}break;
+          }
+        } else {
+          switch(num/(z/4)) {	
+            case 0:{Cube[i][7-j] |= Cube[i][7-i]>>1 | cen[i];}break;
+            case 1:{Cube[i][7-j] |= cen[7-i];j--;}break;
+            case 2:{Cube[i][i] |= Cube[i][i]<<1 | cen[7-i];}break;
+            case 3:{Cube[i][7-j] |= Cube[i][7-j] | cen[i];j++;}break;			
+          }
+        }
+          
+        while(times--) {
+        for(y = 0; y < 8; y++) {
+          for(x = 0; x < 8; x++) {
+            hc595(Cube[y][x]);
+          }
+          hc595out();
+          cen_on(y);
+          usleep(200);
+          cen_on(8);
+          usleep(100);
+        }
+      }
+      times = tv;
+	  }
   }
 }
 
@@ -321,29 +161,27 @@ int main(int argc, char *argv[])
     while(1) {
 
 #if 0
-      //_fail_heart(20);
-      general( warping,15,10);
-#else
-      for(int i = 0; i <= 3; i++) {
+      for_lynette_(10);
+#else 
+      for(int i = 0; i <= 3; i++) //心跳加速
         blew_heart(15 - 5*i);
-      }
-      //_heartbeat(20);
-      _my_heart(20);
-      _fail_heart(20);
-      _display(40, 0);
-      mycube(20);
-      for(int i = 0; i < 3; i++) {
-        cube_water1(7);
-      }
-      //cube_water2(8);
-      for(int i = 0; i < 5; i++) {
+      _my_heart(20);              //停止跳动 渐渐暗淡
+      _fail_heart(20);            //渐渐落下
+      _display(40, 0);            //世界一片黑暗
+      mycube(20);                 //死水微澜
+      for(int i = 0; i < 3; i++)  //落下一滴眼泪 两滴 三滴
+        cube_water1(8);
+      for(int i = 0; i < 5; i++)  //顿时下起了大雨
         rain_cube(5);
-      }
-      rotating_mycube_(10);
-      general( warping,15,10);
-      for(int i = 0; i < 3; i++) {
+      for(int i = 0; i < 3; i++)  //浪涛翻涌
         _sin_cube(sin_cube_table, 14, 6);
-      }
+      rotating_mycube_(10);       //扭曲的升起
+      for(int i = 0; i < 3; i++)  //旋转着
+        general(warping,15,8);
+      displayking(7);             //时间的沙漏
+      general( king,8,10);        //抚平一切
+      _display(40, 0);            //世界仍旧黑暗
+
 #endif
     }
 
